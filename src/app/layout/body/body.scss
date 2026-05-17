@@ -265,7 +265,7 @@
 	backdrop-filter: blur(10px);
 }
 
-.result-frame img { width: 420px; height: 260px; object-fit: cover; border-radius: 8px; }
+.result-frame img { width: 560px; height: 360px; object-fit: cover; border-radius: 8px; }
 
 .result-caption {
 	flex: 1;
@@ -330,7 +330,7 @@
 @media (max-width: 980px) {
 	.result-header { flex-direction: column; }
 	.result-frame { flex-direction: column; }
-	.result-frame img { width: 100%; height: 220px; }
+	.result-frame img { width: 100%; height: 300px; }
 	.result-notes { grid-template-columns: 1fr; }
 }
 
