@@ -265,7 +265,40 @@
 	backdrop-filter: blur(10px);
 }
 
-.result-frame img { width: 560px; height: 360px; object-fit: cover; border-radius: 8px; }
+.result-empty {
+	min-height: 360px;
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	padding: 28px;
+	border-radius: 18px;
+	background: linear-gradient(180deg, rgba(10, 14, 24, 0.78), rgba(6, 10, 18, 0.55));
+	border: 1px dashed rgba(155, 231, 255, 0.22);
+	color: #f8fafc;
+	text-align: left;
+}
+
+.result-empty-icon {
+	font-size: 32px;
+	line-height: 1;
+	flex: 0 0 auto;
+}
+
+.result-empty-title {
+	margin: 0 0 4px;
+	font-size: 18px;
+	font-weight: 800;
+}
+
+.result-empty-text {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.74);
+	line-height: 1.5;
+}
+
+.result-frame img { width: 599px; height: 360px; object-fit: cover; border-radius: 8px; }
 
 .result-caption {
 	flex: 1;

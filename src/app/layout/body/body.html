@@ -36,7 +36,18 @@
             <div class="result-badge">Lista para usar</div>
         </div>
         <div class="result-frame">
-            <img [src]="generatedImages[0].url" alt="" />
+            <ng-container *ngIf="generatedImages.length > 0; else emptyResult">
+                <img [src]="generatedImages[0].url" alt="Resultado generado recientemente" />
+            </ng-container>
+            <ng-template #emptyResult>
+                <div class="result-empty" aria-live="polite">
+                    <span class="result-empty-icon">✨</span>
+                    <div>
+                        <p class="result-empty-title">Genera una imagen</p>
+                        <p class="result-empty-text">Cuando no haya una imagen todavía, aquí verás el resultado recién creado.</p>
+                    </div>
+                </div>
+            </ng-template>
             <div class="result-caption">
                 <div class="result-label">Prompt usado</div>
                 <textarea class="result-prompt"></textarea>
