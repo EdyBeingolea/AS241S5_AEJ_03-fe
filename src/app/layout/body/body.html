@@ -23,10 +23,26 @@
 					<div class="prompt-content">
 						<label id="prompt-label" class="prompt-label">Describa la imagen que quieres crear ...</label>
 						<div class="prompt-inner">
-							<textarea id="prompt-text" rows="2" aria-label="prompt" aria-labelledby="prompt-label">Castillo fantástico en las montañas, paisaje mágico, atardecer</textarea>
-							<button class="btn btn-generate"><span class="icon">✨</span> Generar</button>
+							<textarea id="prompt-text" rows="2" aria-label="prompt" aria-labelledby="prompt-label" [(ngModel)]="promptText"></textarea>
+							<button class="btn btn-generate" (click)="generate()"><span class="icon">✨</span> Generar</button>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="latest-result" *ngIf="generatedImages.length">
+	<div class="container">
+		<h3 class="result-title">Última imagen generada</h3>
+		<div class="result-frame">
+			<img [src]="generatedImages[0].url" [alt]="generatedImages[0].title" />
+			<div class="result-caption">
+				<div class="result-prompt">{{ generatedImages[0].prompt }}</div>
+				<div class="result-actions">
+					<button class="btn btn-ghost">Descargar</button>
+					<button class="btn btn-primary" (click)="reroll()">Re-generar</button>
 				</div>
 			</div>
 		</div>
