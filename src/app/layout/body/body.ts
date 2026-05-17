@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-body',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './body.html',
-  styleUrl: './body.scss',
+  styleUrls: ['./body.scss'],
 })
 export class Body {}
