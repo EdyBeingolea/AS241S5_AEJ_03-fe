@@ -21,7 +21,7 @@
 
 				<div class="prompt-card">
 					<div class="prompt-content">
-						<label id="prompt-label" class="prompt-label">Describa la imagen que quieres crear ...</label>
+						<label id="prompt-label" for="prompt-text" class="prompt-label">Describa la imagen que quieres crear ...</label>
 						<div class="prompt-inner">
 							<textarea id="prompt-text" rows="2" aria-label="prompt" aria-labelledby="prompt-label" [(ngModel)]="promptText"></textarea>
 							<button class="btn btn-generate" (click)="generate()"><span class="icon">✨</span> Generar</button>
@@ -35,11 +35,29 @@
 
 <section class="latest-result" *ngIf="generatedImages.length">
 	<div class="container">
-		<h3 class="result-title">Última imagen generada</h3>
+		<div class="result-header">
+			<div>
+				<p class="result-kicker">Resultado reciente</p>
+				<h3 class="result-title">Última imagen generada</h3>
+				<p class="result-description">Este es el render más nuevo creado a partir de tu prompt. Puedes descargarlo, volver a generarlo o usarlo como base para una nueva idea.</p>
+			</div>
+			<div class="result-badge">Lista para usar</div>
+		</div>
 		<div class="result-frame">
-			<img [src]="generatedImages[0].url" [alt]="generatedImages[0].title" />
+			<img [src]="generatedImages[0].url" alt="" />
 			<div class="result-caption">
+				<div class="result-label">Prompt usado</div>
 				<div class="result-prompt">{{ generatedImages[0].prompt }}</div>
+				<div class="result-notes">
+					<div class="note-item">
+						<span class="note-title">Estilo</span>
+						<span class="note-text">Fantástico cinematográfico</span>
+					</div>
+					<div class="note-item">
+						<span class="note-title">Estado</span>
+						<span class="note-text">Generado hace unos segundos</span>
+					</div>
+				</div>
 				<div class="result-actions">
 					<button class="btn btn-ghost">Descargar</button>
 					<button class="btn btn-primary" (click)="reroll()">Re-generar</button>
