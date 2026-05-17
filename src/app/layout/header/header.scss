@@ -1,0 +1,74 @@
+
+
+.site-header {
+	background: linear-gradient(90deg, #0b0f1a 0%, #0f1724 100%);
+	color: #fff;
+	padding: 18px 0;
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: inherit;
+}
+
+.logo {
+	display: inline-flex;
+	width: 36px;
+	height: 36px;
+	align-items: center;
+	justify-content: center;
+	margin-right: 10px;
+	font-size: 18px;
+	color: #9be7ff;
+}
+
+.brand-text {
+	font-weight: 600;
+	font-size: 18px;
+	color: #fff;
+}
+
+.nav-links {
+	list-style: none;
+	display: flex;
+	gap: 28px;
+	margin: 0;
+	padding: 0;
+	align-items: center;
+}
+
+.nav-links a {
+	color: rgba(255, 255, 255, 0.92);
+	text-decoration: none;
+	font-size: 14px;
+	transition: color .15s ease, transform .15s ease;
+}
+
+.nav-links a:hover {
+	color: #9be7ff;
+	transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+	.nav-links {
+		display: none;
+	}
+	.brand-text {
+		font-size: 16px;
+	}
+}
