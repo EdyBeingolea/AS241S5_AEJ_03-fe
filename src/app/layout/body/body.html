@@ -20,8 +20,13 @@
 				<div class="image-mock" aria-hidden="true"></div>
 
 				<div class="prompt-card">
-					<input type="text" placeholder="Describe la imagen que quieres crear..." aria-label="prompt" />
-					<button class="btn btn-generate">Generar</button>
+					<div class="prompt-content">
+						<label id="prompt-label" class="prompt-label">Describa la imagen que quieres crear ...</label>
+						<div class="prompt-inner">
+							<textarea id="prompt-text" rows="2" aria-label="prompt" aria-labelledby="prompt-label">Castillo fantástico en las montañas, paisaje mágico, atardecer</textarea>
+							<button class="btn btn-generate"><span class="icon">✨</span> Generar</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
