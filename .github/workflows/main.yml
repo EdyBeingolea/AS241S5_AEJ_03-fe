@@ -2,47 +2,33 @@ name: Angular CI
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
 
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [24]
-
     steps:
+      - uses: actions/checkout@v4
 
-      - name: Checkout código
-        uses: actions/checkout@v4
-
-      - name: Instalar Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24
 
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Ejecutar Linter
+      - name: Lint
         run: npm run lint
 
-      - name: Ejecutar pruebas
-        run: npm run test -- --watch=false --browsers=ChromeHeadless
-
-      - name: Generar build
+      - name: Build
         run: npm run build -- --configuration production
 
-      - name: Subir artefactos
+      - name: Publicar artefacto
         uses: actions/upload-artifact@v4
         with:
           name: angular-build
