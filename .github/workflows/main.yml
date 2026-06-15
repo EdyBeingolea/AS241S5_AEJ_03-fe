@@ -1,1 +1,170 @@
+# .github/workflows/angular-ci-cd.yml
+name: Angular 20 CI/CD Pipeline
 
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  ANGULAR_VERSION: '20'
+
+jobs:
+  # Job 1: Verificación de calidad de código
+  code-quality:
+    name: 📋 Code Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Cache Angular build
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache
+          .angular/cache
+          node_modules/.cache
+        key: ${{ runner.os }}-angular-${{ hashFiles('**/package-lock.json') }}
+    
+    - name: Install dependencies
+      run: npm ci --prefer-offline
+    
+    - name: Angular ESLint Check
+      run: npx ng lint
+    
+    - name: Prettier Format Check
+      run: npx prettier --check "src/**/*.{ts,html,scss}"
+    
+    - name: TypeScript strict check
+      run: npx tsc --noEmit --strict
+
+  # Job 2: Pruebas unitarias con Karma/Jasmine
+  unit-tests:
+    name: 🧪 Unit Tests
+    needs: code-quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run Unit Tests with Coverage
+      run: |
+        npx ng test --no-watch --code-coverage --browsers=ChromeHeadless
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./coverage
+        flags: unittests
+        name: angular-coverage
+
+  # Job 3: Pruebas E2E con Cypress/Playwright
+  e2e-tests:
+    name: 🌐 E2E Tests
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Install Playwright
+      run: npx playwright install --with-deps ${{ matrix.browser }}
+    
+    - name: Run E2E Tests
+      run: npx ng e2e -- --browser=${{ matrix.browser }}
+
+  # Job 4: Build con configuraciones específicas
+  build:
+    name: 🏗️ Build Angular App
+    needs: [unit-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [staging, production]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build for ${{ matrix.environment }}
+      run: |
+        if [ "${{ matrix.environment }}" = "production" ]; then
+          npx ng build --configuration production --aot --build-optimizer
+        else
+          npx ng build --configuration staging
+        fi
+    
+    - name: Generate bundle analysis
+      if: matrix.environment == 'production'
+      run: |
+        npx webpack-bundle-analyzer dist/stats.json
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: angular-build-${{ matrix.environment }}
+        path: |
+          dist/
+          !dist/stats.json
+
+  # Job 5: Deploy según ambiente
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: angular-build-${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    
+    - name: Deploy to Firebase
+      if: success()
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+        channelId: ${{ github.ref == 'refs/heads/main' && 'live' || 'preview' }}
+        projectId: your-project-id
